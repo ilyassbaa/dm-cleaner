@@ -43,7 +43,6 @@ def purge_all():
             break
 
         scanned_total += len(messages)
-        # Advance the pointer to scan older messages
         before_id = messages[-1]["id"]
 
         for msg in messages:
@@ -64,7 +63,6 @@ def purge_all():
                         wait = del_res.json().get("retry_after", 1.0)
                         time.sleep(wait)
                     elif del_res.status_code in (404, 403):
-                        # Message already gone or permission denied
                         break
                     else:
                         time.sleep(0.5)
