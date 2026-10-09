@@ -1,14 +1,15 @@
 name: Purge Discord DMs
 
 on:
-  push:
-    branches: [ main ]
+  schedule:
+    # Triggers automatically every 6 hours
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
   run-purge:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
