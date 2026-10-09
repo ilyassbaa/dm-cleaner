@@ -1,23 +1,35 @@
 name: Purge Discord DMs
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
+  repository_dispatch:
+    types: [next-purge-cycle]
 
 jobs:
   run-purge:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install dependencies
         run: pip install requests
+
       - name: Run script
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: python delete_dms.py
+
+      - name: Trigger next cycle
+        if: always()
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type":"next-purge-cycle"}'
