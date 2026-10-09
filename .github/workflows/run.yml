@@ -22,3 +22,4 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: python delete_dms.py
+ 
